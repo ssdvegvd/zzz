@@ -107,30 +107,30 @@ class IntelligentReportGenerator:
         insights = []
 
         # 1. 数据规模分析
-        insights.append(f"📊 **数据规模**：数据集包含 {len(df):,} 个样本，{X.shape[1]} 个特征。")
+        insights.append(f"数据规模：数据集包含 {len(df):,} 个样本，{X.shape[1]} 个特征。")
 
         # 2. 数据质量分析
         missing_rate = df.isnull().sum().sum() / (df.shape[0] * df.shape[1]) * 100
         if missing_rate == 0:
-            insights.append("✅ **数据质量**：数据完整度100%，无缺失值，数据质量良好。")
+            insights.append("数据质量：数据完整度100%，无缺失值，数据质量良好。")
         else:
-            insights.append(f"⚠️ **数据质量**：数据缺失率为 {missing_rate:.1f}%，建议进行数据清洗。")
+            insights.append(f"数据质量：数据缺失率为 {missing_rate:.1f}%，建议进行数据清洗。")
 
         # 3. 数据分布分析
         if X.shape[1] >= 1:
             skewness = stats.skew(X[:, 0]) if len(X) > 0 else 0
             if abs(skewness) < 0.5:
-                insights.append("📈 **数据分布**：特征分布接近正态分布，适合大多数算法。")
+                insights.append("数据分布：特征分布接近正态分布，适合大多数算法。")
             elif abs(skewness) < 1:
-                insights.append("📉 **数据分布**：特征存在轻微偏斜，可考虑数据变换优化。")
+                insights.append("数据分布：特征存在轻微偏斜，可考虑数据变换优化。")
             else:
-                insights.append("⚠️ **数据分布**：特征分布严重偏斜，建议进行对数变换或Box-Cox变换。")
+                insights.append("数据分布：特征分布严重偏斜，建议进行对数变换或Box-Cox变换。")
 
         # 4. 任务特定分析
         if task == "分类任务" and y is not None:
             unique, counts = np.unique(y, return_counts=True)
             class_balance = min(counts) / max(counts) if len(counts) > 1 else 1
-            insights.append(f"🎯 **类别分析**：共 {len(unique)} 个类别")
+            insights.append(f"类别分析：共 {len(unique)} 个类别")
             if class_balance > 0.8:
                 insights.append("类别分布均衡，适合各类分类算法。")
             elif class_balance > 0.5:
@@ -142,7 +142,7 @@ class IntelligentReportGenerator:
             from scipy.spatial.distance import pdist
             if len(X) > 1:
                 avg_distance = np.mean(pdist(X))
-                insights.append(f"🔍 **聚类分析**：样本间平均距离为 {avg_distance:.3f}")
+                insights.append(f"聚类分析：样本间平均距离为 {avg_distance:.3f}")
                 if avg_distance > 1:
                     insights.append("样本分布较为分散，适合基于密度的聚类算法如DBSCAN。")
                 else:
@@ -151,7 +151,7 @@ class IntelligentReportGenerator:
         elif task == "回归任务" and y is not None:
             y_range = y.max() - y.min()
             y_std = y.std()
-            insights.append(f"📈 **目标变量分析**：目标变量范围 {y_range:.2f}，标准差 {y_std:.2f}")
+            insights.append(f"目标变量分析：目标变量范围 {y_range:.2f}，标准差 {y_std:.2f}")
             if y_std / y_range > 0.3:
                 insights.append("目标变量变异较大，适合使用多项式回归等灵活模型。")
             else:
