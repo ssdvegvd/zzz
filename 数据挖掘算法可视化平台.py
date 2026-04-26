@@ -27,7 +27,7 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Image, Spacer
 from reportlab.lib.units import inch
-
+import platform
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 
