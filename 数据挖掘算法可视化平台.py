@@ -27,30 +27,10 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Image, Spacer
 from reportlab.lib.units import inch
-import platform
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 
-# 获取系统所有字体，选择可用的中文字体
-system = platform.system()
-chinese_font_candidates = ['WenQuanYi Zen Hei', 'Noto Sans CJK SC', 'SimHei', 'Microsoft YaHei']
-available_fonts = [f.name for f in fm.fontManager.ttflist]
-chosen_font = None
-for font in chinese_font_candidates:
-    if font in available_fonts:
-        chosen_font = font
-        break
-if not chosen_font:
-    # 如果找不到候选字体，尝试搜索包含“Hei”或“Song”的字体
-    for font in available_fonts:
-        if 'Hei' in font or 'Song' in font or 'CJK' in font:
-            chosen_font = font
-            break
-if chosen_font:
-    plt.rcParams['font.sans-serif'] = [chosen_font]
-else:
-    # 最终回退: 不使用中文字体，但至少不报错
-    plt.rcParams['font.sans-serif'] = ['DejaVu Sans']
+plt.rcParams['font.sans-serif'] = ['SimSun']
 plt.rcParams['axes.unicode_minus'] = False
 
 
@@ -842,8 +822,8 @@ if task == "分类任务":
         Z = Z.reshape(X0.shape)
         ax.contourf(X0, X1, Z, alpha=0.3, cmap=plt.cm.coolwarm)
         ax.scatter(X[:, 0], X[:, 1], c=y, edgecolors='k', cmap=plt.cm.coolwarm)
-        ax.set_xlabel('特征1')
-        ax.set_ylabel('特征2')
+        ax.set_xlabel('Feature 1')
+        ax.set_ylabel('Feature 2')
         ax.set_title(f'{clf_name}  Classification Result (Accuracy:{model_info["测试准确率"]})')
         st.pyplot(fig)
 
@@ -900,9 +880,9 @@ if task == "聚类任务":
         xy = X[class_member_mask]
         ax.scatter(xy[:, 0], xy[:, 1], c=[col], label=f'簇 {k}' if k != -1 else '噪声点', s=50, edgecolors='k')
 
-    ax.set_xlabel('特征1')
-    ax.set_ylabel('特征2')
-    ax.set_title(f'{cluster_algo} 聚类结果 (簇数量：{model_info["簇数量"]})')
+    ax.set_xlabel('Feature 1')
+    ax.set_ylabel('Feature 2')
+    ax.set_title(f'{cluster_algo} Clustering Result (Clusters: {model_info["簇数量"]})')
     ax.legend()
     st.pyplot(fig)
 
@@ -975,9 +955,9 @@ if task == "回归任务":
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.scatter(X, y, color='blue', alpha=0.5, label='原始数据')
     ax.plot(X_range, y_pred, color='red', linewidth=2, label=f'{reg_algo} 拟合曲线')
-    ax.set_xlabel('特征1')
-    ax.set_ylabel('目标变量')
-    ax.set_title(f'{reg_algo} 回归结果 (R²：{test_r2:.3f})')
+    ax.set_xlabel('Feature 1')
+    ax.set_ylabel('Target Variable')
+    ax.set_title(f'{reg_algo} Regression Result (R²：{test_r2:.3f})')
     ax.legend()
     st.pyplot(fig)
 
