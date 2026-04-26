@@ -31,17 +31,25 @@ from reportlab.lib.units import inch
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 
-# 尝试使用云端常见的中文字体
-chinese_fonts = ['WenQuanYi Zen Hei', 'Noto Sans CJK SC', 'SimHei', 'DejaVu Sans']
-available = [f.name for f in fm.fontManager.ttflist]
-use_font = None
-for font in chinese_fonts:
-    if font in available:
-        use_font = font
+# 获取系统所有字体，选择可用的中文字体
+system = platform.system()
+chinese_font_candidates = ['WenQuanYi Zen Hei', 'Noto Sans CJK SC', 'SimHei', 'Microsoft YaHei']
+available_fonts = [f.name for f in fm.fontManager.ttflist]
+chosen_font = None
+for font in chinese_font_candidates:
+    if font in available_fonts:
+        chosen_font = font
         break
-if use_font:
-    plt.rcParams['font.sans-serif'] = [use_font]
+if not chosen_font:
+    # 如果找不到候选字体，尝试搜索包含“Hei”或“Song”的字体
+    for font in available_fonts:
+        if 'Hei' in font or 'Song' in font or 'CJK' in font:
+            chosen_font = font
+            break
+if chosen_font:
+    plt.rcParams['font.sans-serif'] = [chosen_font]
 else:
+    # 最终回退: 不使用中文字体，但至少不报错
     plt.rcParams['font.sans-serif'] = ['DejaVu Sans']
 plt.rcParams['axes.unicode_minus'] = False
 
@@ -836,7 +844,7 @@ if task == "分类任务":
         ax.scatter(X[:, 0], X[:, 1], c=y, edgecolors='k', cmap=plt.cm.coolwarm)
         ax.set_xlabel('特征1')
         ax.set_ylabel('特征2')
-        ax.set_title(f'{clf_name} 分类结果 (准确率：{model_info["测试准确率"]})')
+        ax.set_title(f'{clf_name}  Classification Result (Accuracy:{model_info["测试准确率"]})')
         st.pyplot(fig)
 
     # 展示完整的模型信息（包含实验人员信息）
