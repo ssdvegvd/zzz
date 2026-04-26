@@ -28,7 +28,21 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Image, Spacer
 from reportlab.lib.units import inch
 
-plt.rcParams['font.sans-serif'] = ['SimSun']
+import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
+
+# 尝试使用云端常见的中文字体
+chinese_fonts = ['WenQuanYi Zen Hei', 'Noto Sans CJK SC', 'SimHei', 'DejaVu Sans']
+available = [f.name for f in fm.fontManager.ttflist]
+use_font = None
+for font in chinese_fonts:
+    if font in available:
+        use_font = font
+        break
+if use_font:
+    plt.rcParams['font.sans-serif'] = [use_font]
+else:
+    plt.rcParams['font.sans-serif'] = ['DejaVu Sans']
 plt.rcParams['axes.unicode_minus'] = False
 
 
